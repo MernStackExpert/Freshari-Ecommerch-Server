@@ -20,11 +20,29 @@ const productRoutes = require("./routes/product.route.js");
 // orders
 const orderRoutes = require("./routes/orders.route.js");
 
+// category 
+const categoriesRoutes = require("./routes/categories.route");
+
+// banners 
+const bannersRoutes = require("./routes/banners.route");
+
+// faqs 
+const faqRoutes = require("./routes/faqs.route");
+
+// create admin 
+const adminsRoutes = require("./routes/admins.route");
+
+// admin stats 
+const statsRoutes = require("./routes/stats.route");
+
 // api 
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-
-
+app.use("/api/categories", categoriesRoutes);
+app.use("/api/banners", bannersRoutes);
+app.use("/api/faqs", faqRoutes);
+app.use("/api/admins", adminsRoutes);
+app.use("/api/admin-stats", statsRoutes);
 
 app.get("/", (req, res) => {
   res.send("E-commerce server running 🚀");
