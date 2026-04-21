@@ -35,6 +35,9 @@ const adminsRoutes = require("./routes/admins.route");
 // admin stats 
 const statsRoutes = require("./routes/stats.route");
 
+// copuon code 
+const couponRoutes = require("./routes/coupon.routes.js");
+
 // api 
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
@@ -43,6 +46,7 @@ app.use("/api/banners", bannersRoutes);
 app.use("/api/faqs", faqRoutes);
 app.use("/api/admins", adminsRoutes);
 app.use("/api/admin-stats", statsRoutes);
+app.use("/api/coupons", couponRoutes);
 
 app.get("/", (req, res) => {
   res.send("E-commerce server running 🚀");

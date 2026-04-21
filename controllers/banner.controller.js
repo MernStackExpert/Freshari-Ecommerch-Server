@@ -8,7 +8,7 @@ const collection = async () => {
 const createBanner = async (req, res) => {
   try {
     const bannerCollection = await collection();
-    const { imageUrl, title, link ,isRight } = req.body;
+    const { imageUrl, title, link ,isRight ,isDeals } = req.body;
 
     if (!imageUrl) {
       return res.status(400).send({ message: "Banner image URL is required" });
@@ -19,6 +19,7 @@ const createBanner = async (req, res) => {
       title: title || "",
       link: link || "",
       isRight: isRight || false,
+      isDeals: isDeals || false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

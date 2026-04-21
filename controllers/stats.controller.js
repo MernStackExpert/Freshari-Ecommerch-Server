@@ -11,21 +11,49 @@ const getAdminStats = async (req, res) => {
       totalCategories,
       totalFaqs,
       totalBanners,
-      revenueData
+      revenueData,
     ] = await Promise.all([
       db.collection("products").countDocuments(),
+
       db.collection("orders").countDocuments(),
+
       db.collection("admins").countDocuments(),
+
       db.collection("categories").countDocuments(),
+
       db.collection("faqs").countDocuments(),
+
       db.collection("banners").countDocuments(),
-      db.collection("orders").aggregate([
-        { $group: { _id: null, totalRevenue: { $sum: "$total" } } }
-      ]).toArray()
+
+      db.collection("orders")
+        .aggregate([
+          {
+            $match: {
+              paymentStatus: "paid"
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              totalRevenue: {
+                $sum: "$total"
+              }
+            }
+          }
+        ])
+        .toArray(),
     ]);
 
-    const pendingOrders = await db.collection("orders").countDocuments({ orderStatus: "pending" });
-    const totalRevenue = revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
+    const pendingOrders = await db
+      .collection("orders")
+      .countDocuments({
+        orderStatus: "pending"
+      });
+
+    const totalRevenue =
+      revenueData.length > 0
+        ? revenueData[0].totalRevenue
+        : 0;
 
     res.status(200).json({
       totalProducts,
@@ -35,10 +63,14 @@ const getAdminStats = async (req, res) => {
       totalFaqs,
       totalBanners,
       totalRevenue,
-      pendingOrders
+      pendingOrders,
     });
+
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch stats", error: error.message });
+    res.status(500).json({
+      message: "Failed to fetch stats",
+      error: error.message
+    });
   }
 };
 

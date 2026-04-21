@@ -33,23 +33,35 @@ const getOrders = async (req, res) => {
       orders,
     });
   } catch (error) {
-    res.status(500).send({ message: "Failed to fetch orders", error: error.message });
+    res
+      .status(500)
+      .send({ message: "Failed to fetch orders", error: error.message });
   }
 };
 
 const createOrders = async (req, res) => {
   try {
     const ordersCollection = await collection();
-    const { email, name, products, total, shippingAddress, phone } = req.body;
+    const {
+      email,
+      name,
+      products,
+      total,
+      shippingAddress,
+      phone,
+      whatsapp,
+      note,
+    } = req.body;
 
-    if (!email || !products || products.length === 0 || !total) {
+    if (!products || products.length === 0 || !total) {
       return res.status(400).send({ message: "Invalid order data" });
     }
-
     const order = {
-      email,
+      email: email || "no-email@freshari.com",
       customerName: name,
       phone,
+      whatsapp: whatsapp || "N/A",
+      note: note || "N/A",
       products,
       total,
       paymentMethod: "COD",
@@ -65,7 +77,7 @@ const createOrders = async (req, res) => {
     const html = `
       <div style="font-family: Arial, sans-serif; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px;">
         <h2 style="color: #22C55E;">Freshari 🍃 - Order Confirmed!</h2>
-        <p>Hi ${name || 'Customer'}, thanks for shopping with us.</p>
+        <p>Hi ${name || "Customer"}, thanks for shopping with us.</p>
         <p><b>Order ID:</b> ${result.insertedId}</p>
         <p><b>Total Amount:</b> ৳${total}</p>
         <p><b>Payment Method:</b> Cash on Delivery</p>
@@ -102,11 +114,12 @@ const updateOrder = async (req, res) => {
   try {
     const ordersCollection = await collection();
     const id = req.params.id;
-    if (!ObjectId.isValid(id)) return res.status(400).send({ message: "Invalid ID" });
+    if (!ObjectId.isValid(id))
+      return res.status(400).send({ message: "Invalid ID" });
 
     const result = await ordersCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { ...req.body, updatedAt: new Date() } }
+      { $set: { ...req.body, updatedAt: new Date() } },
     );
 
     res.send({ message: "Order updated", result });

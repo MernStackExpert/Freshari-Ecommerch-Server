@@ -30,7 +30,7 @@ const createAdminUser = async (req, res) => {
       email,
       password: hashedPassword,
       phone,
-      role: "admin",
+      role: "user",
       status: "pending",
       createdAt: new Date(),
     };

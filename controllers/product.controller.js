@@ -10,42 +10,47 @@ const getAllProducts = async (req, res) => {
     const productCollection = await collection();
     const query = {};
 
-    //Category filter
+    // ১. ক্যাটাগরি ফিল্টার (Nested slug অনুযায়ী)
     if (req.query.category) {
-      query.category = req.query.category;
+      query["category.slug"] = req.query.category;
     }
 
-    //Search filter
+    // ২. সার্চ ফিল্টার
     if (req.query.search) {
       query.name = { $regex: req.query.search, $options: "i" };
     }
 
-    //Price range filter
+    // ৩. প্রাইস রেঞ্জ ফিল্টার (pricing.price এর ভেতর থেকে)
     if (req.query.minPrice || req.query.maxPrice) {
-      query.price = {};
-      if (req.query.minPrice) query.price.$gte = Number(req.query.minPrice);
-      if (req.query.maxPrice) query.price.$lte = Number(req.query.maxPrice);
+      query["pricing.price"] = {};
+      if (req.query.minPrice) query["pricing.price"].$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) query["pricing.price"].$lte = Number(req.query.maxPrice);
     }
 
-    //rating filter
+    // ৪. রেটিং ফিল্টার (social.rating এর ভেতর থেকে)
     if (req.query.rating) {
-      query.rating = { $gte: Number(req.query.rating) };
+      query["social.rating"] = { $gte: Number(req.query.rating) };
     }
 
-    //pagination skip + limit
+    // ৫. স্ট্যাটাস ফিল্টার (যেমন Today Special বা Featured)
+    if (req.query.isTodaySpecial) {
+      query["status.isTodaySpecial"] = req.query.isTodaySpecial === "true";
+    }
+
+    // প্যাগিনেশন
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
     const skip = (page - 1) * limit;
 
-    //total product count
     const totalProducts = await productCollection.countDocuments(query);
 
-    //sort asc + desc
-
-    let sort = {};
+    // সর্টিং লজিক
+    let sort = { createdAt: -1 }; // বাই ডিফল্ট নতুনগুলো আগে দেখাবে
     if (req.query.sortBy) {
       const order = req.query.order === "desc" ? -1 : 1;
-      sort[req.query.sortBy] = order;
+      // যদি sortBy 'price' হয় তবে 'pricing.price' এ সর্ট করবে
+      const sortField = req.query.sortBy === "price" ? "pricing.price" : req.query.sortBy;
+      sort = { [sortField]: order };
     }
 
     const products = await productCollection
@@ -107,12 +112,20 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const productCollection = await collection();
-
     const id = req.params.id;
+
+    const updatedData = { ...req.body };
+
+    delete updatedData._id;
 
     const result = await productCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { ...req.body, updatedAt: new Date() } }
+      { 
+        $set: { 
+          ...updatedData, 
+          updatedAt: new Date() 
+        } 
+      }
     );
 
     if (result.matchedCount === 0) {
@@ -121,7 +134,10 @@ const updateProduct = async (req, res) => {
 
     res.send({ message: "Product updated successfully", result });
   } catch (error) {
-    res.status(500).send({ message: "Failed to update product", error });
+    res.status(500).send({ 
+      message: "Failed to update product", 
+      error: error.message 
+    });
   }
 };
 
