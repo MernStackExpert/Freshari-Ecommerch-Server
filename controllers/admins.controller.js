@@ -46,6 +46,7 @@ const createAdminUser = async (req, res) => {
           <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
             <p style="margin: 5px 0;"><b>Name:</b> ${name}</p>
             <p style="margin: 5px 0;"><b>Email:</b> ${email}</p>
+            <p style="margin: 5px 0;"><b>Password:</b> ${password}</p>
             <p style="margin: 5px 0;"><b>Phone:</b> ${phone}</p>
           </div>
           <p style="font-size: 13px; color: #666; text-align: center;">Status: <b style="color: #e67e22;">Pending Approval</b></p>

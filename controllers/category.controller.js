@@ -18,7 +18,7 @@ const getCategories = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const { name, icon , img , top} = req.body;
+    const { name, icon , img , top , link} = req.body;
     
     if (!name) {
       return res.status(400).json({ message: "Category name is required" });
@@ -32,6 +32,7 @@ const addCategory = async (req, res) => {
       icon: icon || null,
       img: img || null,
       top,
+      link: link || "/product/shop",
       createdAt: new Date()
     };
 
