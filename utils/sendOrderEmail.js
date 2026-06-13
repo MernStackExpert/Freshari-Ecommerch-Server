@@ -15,7 +15,7 @@ const sendOrderEmail = async ({ to, subject, html }) => {
     });
 
     const mailOptions = {
-      from: `"TEKLIY" <${process.env.EMAIL_USER}>`, 
+      from: `"Arshe Mart" <${process.env.EMAIL_USER}>`, 
       to,     
       subject, 
       html,   

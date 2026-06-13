@@ -38,27 +38,63 @@ const createAdminUser = async (req, res) => {
     const result = await adminCollection.insertOne(newUser);
 
     const html = `
-      <div style="background-color: #f0fdf4; padding: 30px; font-family: sans-serif;">
-        <div style="max-width: 500px; margin: 0 auto; background: #ffffff; color: #333; padding: 25px; border-radius: 10px; border: 1px solid #22c55e;">
-          <h2 style="color: #16a34a; text-align: center;">Freshari - Admin Account Created</h2>
-          <p>Hello <b>${name}</b>,</p>
-          <p>Your admin account has been created on <b>Freshari</b>. Please wait for master approval.</p>
-          <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #16a34a;">
-            <p style="margin: 5px 0;"><b>Name:</b> ${name}</p>
-            <p style="margin: 5px 0;"><b>Email:</b> ${email}</p>
-            <p style="margin: 5px 0;"><b>Password:</b> ${password}</p>
-            <p style="margin: 5px 0;"><b>Phone:</b> ${phone}</p>
+      <div style="background-color: #f8fafc; padding: 40px 15px; font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 40px rgba(15,23,42,0.05);">
+          
+          <div style="background-color: #0f172a; padding: 45px 20px; text-align: center;">
+            <h1 style="margin: 0; font-size: 36px; font-weight: 900; letter-spacing: 2px; color: #ffffff;">
+              ARSHE<span style="color: #f97316;">MART.</span>
+            </h1>
+            <p style="margin: 10px 0 0; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Admin Access Request</p>
           </div>
-          <p style="font-size: 13px; color: #666; text-align: center;">Status: <b style="color: #e67e22;">Pending Approval</b></p>
+
+          <div style="padding: 40px 30px;">
+            <h2 style="margin: 0 0 15px; color: #0f172a; font-size: 22px; font-weight: 900;">হ্যালো, ${name}</h2>
+            <p style="margin: 0 0 30px; color: #64748b; font-size: 15px; font-weight: 500;">আপনার অ্যাডমিন অ্যাকাউন্টটি সফলভাবে তৈরি করা হয়েছে। তবে প্যানেলে অ্যাক্সেস পেতে মাস্টার অ্যাডমিনের অনুমোদনের জন্য অপেক্ষা করুন।</p>
+
+            <div style="background-color: #f8fafc; border-left: 4px solid #f97316; border-radius: 0 16px 16px 0; padding: 25px; margin-bottom: 35px;">
+              <h3 style="margin: 0 0 15px; color: #0f172a; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">অ্যাকাউন্টের বিবরণ:</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-weight: 600; font-size: 14px; width: 30%;">Name:</td>
+                  <td style="padding: 8px 0; color: #0f172a; font-weight: 800; font-size: 14px;">${name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-weight: 600; font-size: 14px;">Email:</td>
+                  <td style="padding: 8px 0; color: #0f172a; font-weight: 800; font-size: 14px;">${email}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-weight: 600; font-size: 14px;">Password:</td>
+                  <td style="padding: 8px 0; color: #0f172a; font-weight: 800; font-size: 14px;">${password}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #64748b; font-weight: 600; font-size: 14px;">Phone:</td>
+                  <td style="padding: 8px 0; color: #0f172a; font-weight: 800; font-size: 14px;">${phone}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+              <span style="display: inline-block; background-color: #fff7ed; color: #ea580c; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; padding: 10px 20px; border-radius: 50px; border: 1px solid #fed7aa;">
+                Status: Pending Approval
+              </span>
+            </div>
+          </div>
+
+          <div style="background-color: #f8fafc; padding: 30px 20px; text-align: center; border-top: 1px solid #f1f5f9;">
+            <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 700;">© ${new Date().getFullYear()} Arshe-Mart. All Rights Reserved.</p>
+            <p style="margin: 8px 0 0; color: #94a3b8; font-size: 11px; font-weight: 600;">Powered by <a href="https://aura-threads.arshetechnology.com" style="color: #f97316; text-decoration: none; font-weight: 900;">ARSHE TECHNOLOGY</a></p>
+          </div>
+
         </div>
       </div>
     `;
 
     try {
       await transporter.sendMail({
-        from: `"Freshari 🍃" <${process.env.EMAIL_USER}>`,
+        from: `"Arshe-Mart 🛍️" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: "Admin Access Request - Freshari",
+        subject: "Admin Access Request - Arshe-Mart",
         html,
       });
     } catch (err) {
